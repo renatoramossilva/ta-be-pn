@@ -22,3 +22,9 @@ This project uses several tools to maintain code quality and enforce coding stan
 - **[pylint](https://pylint.pycqa.org/)**: A static code analysis tool to enforce coding standards and detect errors.
 - **[isort](https://pycqa.github.io/isort/)**: A tool to sort and format imports automatically.
 - **[mypy](http://mypy-lang.org/)**: A static type checker to ensure type safety in Python code.
+
+These tools are integrated with [pre-commit](https://pre-commit.com/), ensuring that they are automatically run before each commit to maintain code quality.
+
+To manually run these tools, you can use the following commands:
+
+`pre-commit run --all-files` or `poetry run pre-commit run --all-files`
