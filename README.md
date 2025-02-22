@@ -2,8 +2,18 @@
 
 ## Table of Contents
 
+- [Requirements](#requirements)
 - [Dependency Management with Poetry](#dependency-management-with-poetry)
 - [Code Quality](#code-quality)
+- [Unit tests](#unit-tests)
+
+
+## Requirements
+
+Before you begin, ensure you have the following prerequisites installed on your machine:
+
+- [Python 3.9](https://www.python.org/downloads/) or higher
+- [Poetry](https://python-poetry.org/docs/#installation)
 
 
 ## Dependency Management with Poetry
@@ -28,3 +38,14 @@ These tools are integrated with [pre-commit](https://pre-commit.com/), ensuring 
 To manually run these tools, you can use the following commands:
 
 `pre-commit run --all-files` or `poetry run pre-commit run --all-files`
+
+
+## Unit tests
+
+This project uses `pytest` for unit testing to ensure the functionality of key features like car bookings and availability checks.
+
+### Running Tests
+
+To run the unit tests locally:
+
+`poetry run pytest`
