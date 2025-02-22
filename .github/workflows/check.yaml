@@ -44,3 +44,6 @@ jobs:
             poetry run mypy --install-types
             poetry run mypy .
         continue-on-error: true
+
+      - name: Run tests
+        run: poetry run pytest -vvv
