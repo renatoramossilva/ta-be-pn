@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Black
         run: |
-            poetry run black --check .  # Check formatting without making changes
+            poetry run black --check --diff .  # Check formatting without making changes
 
       - name: Run Pylint
         run: |
@@ -41,5 +41,6 @@ jobs:
 
       - name: Run mypy
         run: |
-            poetry run mypy **/*.py
+            poetry run mypy --install-types
+            poetry run mypy .
         continue-on-error: true

@@ -14,10 +14,18 @@ dependencies = [
     "mypy (>=1.15.0,<2.0.0)",
     "pytest (>=8.3.4,<9.0.0)",
     "tox (>=4.24.1,<5.0.0)",
-    "pre-commit (>=4.1.0,<5.0.0)"
+    "pre-commit (>=4.1.0,<5.0.0)",
+    "fastapi (>=0.115.8,<0.116.0)",
+    "pyproj (>=3.7.1,<4.0.0)",
+    "uvicorn (>=0.34.0,<0.35.0)",
+    "requests (>=2.32.3,<3.0.0)",
+    "pytest-mock (>=3.14.0,<4.0.0)"
 ]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [{ include = "app" }]
