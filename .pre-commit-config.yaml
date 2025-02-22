@@ -21,6 +21,6 @@ repos:
 
       - id: mypy
         name: mypy
-        entry: poetry run mypy **/*.py
+        entry: sh -c "poetry run mypy --install-types && poetry run mypy **/*.py"
         language: system
         types: [python]
