@@ -9,8 +9,8 @@ class CoverageResponse(BaseModel):
     """
     Response model for the get_coverage route
 
-    :param coordinates: The coordinates of the address
-    :param gps: The GPS coordinates of the address
+    :param `coordinates`: The coordinates of the address
+    :param `gps`: The GPS coordinates of the address
     """
 
     coordinates: list[float]

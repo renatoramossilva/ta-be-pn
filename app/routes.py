@@ -17,9 +17,11 @@ def get_coverage(address: str) -> CoverageResponse | tuple[dict[str, str], int]:
     """
     Get network coverage for a given address
 
-    :param address: The address to get the network coverage for
+    **Request Body:**
+    - `address`: The address to get the network coverage for
 
-    :return: A dictionary containing the list of operators and their coverage
+    **Returns:**
+    A dictionary containing the list of operators and their coverage
         for the given address
     """
     cood = get_coordinates(address)
