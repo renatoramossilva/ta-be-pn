@@ -6,14 +6,14 @@ This module contains the FastAPI routes for the mobile network coverage API.
 
 from fastapi import APIRouter  # type: ignore
 
-from app.models import CoverageResponse  # type: ignore
-from app.utils import get_coordinates, lamber93_to_wgs84
+from app.db.data import find_network_coverage
+from app.utils import get_coordinates
 
 router = APIRouter()
 
 
-@router.get("/coverage", response_model=CoverageResponse)
-def get_coverage(address: str) -> CoverageResponse | tuple[dict[str, str], int]:
+@router.get("/coverage")
+def coverage(address: str) -> dict[str, dict[str, bool]]:
     """
     Get network coverage for a given address
 
@@ -28,6 +28,4 @@ def get_coverage(address: str) -> CoverageResponse | tuple[dict[str, str], int]:
     if cood is None:
         return {"error": "Unable to get coordinates for the given address"}, 400
 
-    gps_coodinates = lamber93_to_wgs84(*cood)
-
-    return CoverageResponse(coordinates=get_coordinates(address), gps=gps_coodinates)
+    return find_network_coverage(*cood)
