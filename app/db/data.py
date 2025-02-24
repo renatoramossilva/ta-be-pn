@@ -1,17 +1,17 @@
 """Data module to handle the network coverage data"""
 
-import logging
 import pathlib
 
 import numpy as np
 import pandas as pd
 
-from app.utils import wgs84_to_lamber93
+from app.utils.common import wgs84_to_lamber93
+from app.utils.logger import setup_logger
 
 DB_URL: str = pathlib.Path(
     "app/db/2018_01_Sites_mobiles_2G_3G_4G_France_metropolitaine_L93.csv"
 )
-LOG = logging.getLogger(__name__)
+LOG = setup_logger(__name__)
 
 
 # Operators
@@ -41,16 +41,24 @@ def validate_operator_data(df):
     **Returns:**
     A valid dataframe
     """
+    LOG.info("Validating operator data")
+
     # List of columns to validate
     columns = ["Operateur", "x", "y", "2G", "3G", "4G" ""]
 
     # Convert columns to numeric, if the values are not numeric,
     # they will be converted to NaN
+    LOG.info("Converting columns to numeric")
     for column in columns:
         df[column] = pd.to_numeric(df[column], errors="coerce")
 
+    LOG.info("Removing rows with missing data")
     df = df.dropna(subset=columns)  # Remove rows with missing data
+
+    LOG.info("Removing duplicate rows")
     df = df.drop_duplicates()  # Remove duplicate rows
+
+    LOG.info("Operator data validated")
 
     return df
 
@@ -65,6 +73,7 @@ def load_csv_file(csv_path: pathlib.Path) -> pd.DataFrame:
     **Returns:**
     A pandas DataFrame with the CSV data
     """
+    LOG.info("Loading CSV file")
     if csv_path.exists():
         df = pd.read_csv(csv_path, delimiter=";")
         df = validate_operator_data(df)
@@ -102,6 +111,8 @@ def find_network_coverage(long: float, lat: float) -> dict[str, dict[str, bool]]
             ...
         }
     """
+    LOG.info("Finding network coverage for location: %s(lat), %s(long)", lat, long)
+
     # Convert WGS84 to Lambert93
     x_target, y_target = wgs84_to_lamber93(lat, long)
 
@@ -112,12 +123,15 @@ def find_network_coverage(long: float, lat: float) -> dict[str, dict[str, bool]]
     df["y"] = df["y"].astype("Int64")
 
     # Calculate euclidean distance
+    LOG.info("Calculating euclidean distance")
     df["distance"] = np.sqrt(
         (df["x"] - int(x_target)) ** 2 + (df["y"] - int(y_target)) ** 2
     )
 
     df["distance"] = df["distance"].astype("Int64")
     distance_threshold = 100  # Threshold distance in meters
+
+    LOG.info("Filtering nearby operators")
     nearby_operators = df[
         df["distance"] <= distance_threshold
     ]  # Filter nearby operators
@@ -125,6 +139,7 @@ def find_network_coverage(long: float, lat: float) -> dict[str, dict[str, bool]]
     coverage_data = {}
 
     # Get coverage data for each operator
+    LOG.info("Getting coverage data for nearby operators")
     for _, row in nearby_operators.iterrows():
         operator_name = OPERATORS.get(int(row["Operateur"]), "Unknown")
         coverage_data[operator_name] = {

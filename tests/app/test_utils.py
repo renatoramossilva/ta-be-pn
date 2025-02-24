@@ -5,7 +5,7 @@ This file contains tests for the utils module.
 import pytest
 import requests
 
-from app.utils import get_coordinates, lamber93_to_wgs84
+from app.utils.common import get_coordinates, lamber93_to_wgs84
 
 
 @pytest.mark.parametrize(
