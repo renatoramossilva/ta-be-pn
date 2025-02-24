@@ -7,7 +7,7 @@ This module contains the FastAPI routes for the mobile network coverage API.
 from fastapi import APIRouter  # type: ignore
 
 from app.db.data import find_network_coverage
-from app.utils import get_coordinates
+from app.utils.common import get_coordinates
 
 router = APIRouter()
 

@@ -6,7 +6,7 @@ import pathlib
 import numpy as np
 import pandas as pd
 
-from app.utils import wgs84_to_lamber93
+from app.utils.common import wgs84_to_lamber93
 
 DB_URL: str = pathlib.Path(
     "app/db/2018_01_Sites_mobiles_2G_3G_4G_France_metropolitaine_L93.csv"
