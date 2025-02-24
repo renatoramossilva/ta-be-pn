@@ -20,7 +20,6 @@ Before you begin, ensure you have the following prerequisites installed on your 
 - [Poetry](https://python-poetry.org/docs/#installation)
 
 
-
 ## Project Structure
 
 The project is organized following this structure:
@@ -55,9 +54,15 @@ Once installed, you can easily manage dependencies by running `poetry add <depen
 
 ## Project Setup
 
-To set up the project, you need to following this steps:
+There are two ways to set up the project:
+
+  - Localhost
+  - Docker container
+
+### Running on the localhost
 
 Initialize the application using `uvicorn` command:
+
 ```bash
 > poetry run uvicorn app.main:app --reload
 
@@ -69,7 +74,44 @@ INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 ```
 
-To validate the endpoint, you can use the following `curl` command:
+### Running on Docker container
+
+Initialize the application using `docker` commands:
+
+```bash
+> docker build -t ta-be-pn-image -f docker/Dockerfile .
+[+] Building 2.9s (10/10) FINISHED                                                                                                       docker:default
+ => [internal] load build definition from Dockerfile                                                                                               0.3s
+ => => transferring dockerfile: 374B                                                                                                               0.0s
+ => [internal] load metadata for docker.io/library/python:3.10-slim                                                                                0.6s
+ => [internal] load .dockerignore                                                                                                                  0.3s
+ => => transferring context: 2B                                                                                                                    0.0s
+ => [1/5] FROM docker.io/library/python:3.10-slim@sha256:66aad90b231f011cb80e1966e03526a7175f0586724981969b23903abac19081                          0.0s
+ => [internal] load build context                                                                                                                  0.4s
+ => => transferring context: 123.90kB                                                                                                              0.1s
+ => CACHED [2/5] WORKDIR /app                                                                                                                      0.0s
+ => CACHED [3/5] COPY pyproject.toml poetry.lock* ./                                                                                               0.0s
+ => CACHED [4/5] RUN pip install --no-cache-dir poetry &&     poetry install --no-root                                                             0.0s
+ => CACHED [5/5] COPY . .                                                                                                                          0.0s
+ => exporting to image                                                                                                                             0.2s
+ => => exporting layers                                                                                                                            0.0s
+ => => writing image sha256:7aee6f6ef83098d384d9278d304dfeeed30ac7ce986e3bddc3c82c1be7b1d825                                                       0.0s
+ => => naming to docker.io/library/ta-be-pn-image                                                                                                  0.1s
+
+> docker images
+REPOSITORY       TAG       IMAGE ID       CREATED          SIZE
+ta-be-pn-image   latest    7aee6f6ef830   48 seconds ago   569MB
+
+> docker run -d -p 8000:8000 ta-be-pn-image
+
+2cf614bc88d623a83284c91e188257c14a0d6157c55381ef5c22e59ed17ddd72
+
+> docker ps
+CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+2cf614bc88d6   ta-be-pn-image   "uvicorn app.main:ap…"   6 seconds ago   Up 5 seconds   0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   beautiful_spence
+```
+
+To validate the endpoint, Indepently the way that the API was started, you can use the following `curl` command:
 
 ```bash
 > curl -s 'GET' 'http://127.0.0.1:8000/coverage?address=42+rue+papernest+75011+Paris' | jq .
