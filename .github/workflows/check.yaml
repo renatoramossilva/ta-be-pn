@@ -46,4 +46,4 @@ jobs:
         continue-on-error: true
 
       - name: Run tests
-        run: poetry run pytest -vvv
+        run: poetry run tox
