@@ -9,6 +9,7 @@
 - [API Documentation](#api-documentation)
 - [Code Quality](#code-quality)
 - [Unit tests](#unit-tests)
+- [Tests Coverage](tests-coverage)
 - [Continuous Integration](#continuous-integration)
 
 
@@ -134,6 +135,13 @@ This project uses `pytest` for unit testing to ensure the functionality of key f
 To run the unit tests locally:
 
 `poetry run pytest`
+
+
+## Tests Coverage
+
+The coverage report provides a detailed analysis of the codebase, indicating which parts of the code are covered by tests and which are not. This helps in identifying untested areas and improving the overall test coverage. To generate the coverage report, run the following command:
+
+You can access the test coverage report after setting up the project by navigating to [http://localhost:5001/](http://localhost:5001/). The coverage configuration is included in the Dockerfile, and the report is served on port 5001.
 
 
 ## Continous Integration

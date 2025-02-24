@@ -13,6 +13,12 @@ RUN pip install --no-cache-dir poetry && \
 
 COPY . .
 
-EXPOSE 8000
+# Run tests
+RUN coverage run -m pytest
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Export test coverage to HTML file
+RUN coverage html
+
+EXPOSE 8000 5001
+
+CMD ["sh", "-c", "uvicorn app.main:app --host=0.0.0.0 & python -m http.server 5001 --directory htmlcov"]
