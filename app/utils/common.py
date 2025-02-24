@@ -4,15 +4,15 @@ Common functions used in the project
 
 # pylint: disable=import-error
 
-import logging
-
 import pyproj  # type: ignore
 import requests
+
+from app.utils.logger import setup_logger
 
 # Timeout for the requests in seconds
 REQUEST_TIMEOUT = 10
 
-LOG = logging.getLogger(__name__)
+LOG = setup_logger(__name__)
 
 
 def wgs84_to_lamber93(lat: float, lon: float) -> tuple[float, float]:
@@ -32,12 +32,14 @@ def wgs84_to_lamber93(lat: float, lon: float) -> tuple[float, float]:
     **Returns:**
     A tuple containing the Lambert93 x and y coordinates
     """
+    LOG.info("Converting WGS84 coordinates to Lamber93")
     wgs84 = pyproj.Proj(init="epsg:4326")
     lamber93 = pyproj.Proj(init="epsg:2154")
 
+    LOG.info("wgsr84: %s(latitude), %s(longitude)", lat, lon)
     x, y = pyproj.transform(wgs84, lamber93, lon, lat)
-    logging.info("wgsr84: %s, %s", lat, lon)
-    logging.info("lamber93: %s, %s", x, y)
+
+    LOG.info("lamber93: %s(x), %s(y)", x, y)
 
     return x, y
 
@@ -60,6 +62,7 @@ def lamber93_to_wgs84(coord_x: float, coord_y: float) -> tuple[float, float]:
     **Request Body:**
     A tuple containing the longitude and latitude in GPS coordinates
     """
+    LOG.info("Converting Lamber93 coordinates to WGS84")
     lamber = pyproj.Proj(
         "+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 "
         "+x_0=700000 +y_0=6600000 +ellps=GRS80 "
@@ -67,7 +70,11 @@ def lamber93_to_wgs84(coord_x: float, coord_y: float) -> tuple[float, float]:
     )
 
     wgs84 = pyproj.Proj("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
+
+    LOG.info("lamber93: %s (x), %s (y)", coord_x, coord_y)
     lat, long = pyproj.transform(lamber, wgs84, coord_x, coord_y)
+
+    LOG.info("wgsr84: %s (latitude), %s (longitude)", lat, long)
     return lat, long
 
 
@@ -87,13 +94,17 @@ def get_coordinates(address: str) -> tuple[float, float] | None:
     - `Exception`: If an error occurs while fetching the coordinates
     """
     url = f"https://api-adresse.data.gouv.fr/search/?q={address}"
+
+    LOG.info("Fetching coordinates for address: %s", address)
     try:
         response = requests.get(url, timeout=REQUEST_TIMEOUT)
         response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
         data = response.json()
 
         if data.get("features"):  # Check if the features key exists
-            return data["features"][0]["geometry"]["coordinates"]
+            coordinates = data["features"][0]["geometry"]["coordinates"]
+            LOG.info("Coordinates found: %s", coordinates)
+            return coordinates
 
     except requests.exceptions.Timeout:
         LOG.error(
