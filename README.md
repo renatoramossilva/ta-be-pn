@@ -137,6 +137,13 @@ To run the unit tests locally:
 `poetry run pytest`
 
 
+### Testing Across Python Versions
+
+To verify compatibility with different Python versions, the project is tested with Python 3.10, 3.11, and 3.12. We use `tox` to automate testing across these Python versions.
+
+`tox` or `poetry run tox`
+
+
 ## Tests Coverage
 
 The coverage report provides a detailed analysis of the codebase, indicating which parts of the code are covered by tests and which are not. This helps in identifying untested areas and improving the overall test coverage. To generate the coverage report, run the following command:
@@ -150,6 +157,6 @@ Whenever a pull request is opened, the GitHub Actions workflow will trigger and 
 
 - Code Formatting: Run `black` and `isort` to format the code.
 - Static Analysis: Execute `pylint` and `mypy` to ensure code quality.
-- Unit Testing: Run `pytest` to execute the unit tests and check for coverage.
+- Unit Testing: Run `pytest` to execute the unit tests and check for coverage. (specifically 3.10, 3.11, and 3.12)
 
 This setup ensures that only code that passes all checks is merged into the master branch, maintaining a high standard of code quality throughout the development process.
