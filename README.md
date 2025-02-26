@@ -81,11 +81,12 @@ Initialize the application using `docker` commands:
 
 ```bash
 > docker build -t ta-be-pn-image -f docker/Dockerfile .
-> docker run -d -p 8000:8000 ta-be-pn-image
+> docker run --rm -d -p 8000:8000 -p 5001:5001 ta-be-pn-image
 ```
-- `-p 8000:8000`: This maps port 8000  (The FastAPI application runs on this port) inside the container to port 8000 on your local machine. You can access the app locally at http://localhost:5001.
 - `--rm`: Automatically removes the container when it is stopped.
 - `-d`: Runs the container in detached mode (in the background).
+- `-p 8000:8000`: This maps port 8000  (The FastAPI application runs on this port) inside the container to port 8000 on your local machine. You can access the app locally at http://localhost:8000.
+- `-p 5001:5001`: This maps port 5001 inside the container to port 5001 on your local machine, which is used for test coverage reports. You can view the test coverage at http://localhost:5001.
 
 To validate the endpoint, independently the way that the API was started, you can use the following `curl` command:
 
