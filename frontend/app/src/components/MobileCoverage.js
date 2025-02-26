@@ -1,3 +1,4 @@
+import getMobileCoverage from "../services/api";
 import React, { useState } from 'react';
 
 function App() {
@@ -5,15 +6,14 @@ function App() {
   const [address, setAddress] = useState('');
   const [result, setResult] = useState('');
 
-  // Function to simulate the query
-  const queryAddress = () => {
-    if (!address) {
-      setResult('Please enter an address.');
-      return;
+const handleSearch = async () => {
+    try {
+        const data = await getMobileCoverage(address);
+        setResult(data);
+    } catch (error) {
+        setResult('Error fetching data');
     }
-
-    setResult(`Query result: ${address}`);
-  };
+};
 
 return (
     <div className="App">
@@ -28,10 +28,13 @@ return (
             />
             <button
                 style={{ height: '30px' }}
-                onClick={queryAddress}>Search
+                onClick={handleSearch}> Search
             </button>
         </div>
-        <p>{result}</p>
+        { result && (<div>
+            <h2>Result:</h2>
+                <pre>{typeof result === 'object' ? JSON.stringify(result, null, 2) : result}</pre>
+        </div> )}
     </div>
 );
 }
