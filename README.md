@@ -88,6 +88,15 @@ Initialize the application using `docker` commands:
 - `-p 8000:8000`: This maps port 8000  (The FastAPI application runs on this port) inside the container to port 8000 on your local machine. You can access the app locally at http://localhost:8000.
 - `-p 5001:5001`: This maps port 5001 inside the container to port 5001 on your local machine, which is used for test coverage reports. You can view the test coverage at http://localhost:5001.
 
+
+### Using docker compose
+
+Initialize the application using `docker compose` command:
+
+```bash
+> docker compose up --build
+```
+
 To validate the endpoint, independently the way that the API was started, you can use the following `curl` command:
 
 ```bash
