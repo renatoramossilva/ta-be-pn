@@ -62,7 +62,7 @@ git clone https://github.com/renatoramossilva/ta-be-pn
 cd ta-be-pn
 ```
 
-There are two ways to set up the project:
+There are three ways to set up the project:
 
   - Localhost
   - Docker container
