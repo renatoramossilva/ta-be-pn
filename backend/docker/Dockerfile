@@ -1,17 +1,17 @@
 FROM python:3.10-slim
 
-WORKDIR /app
+WORKDIR /app/backend
 
 ENV POETRY_VIRTUALENVS_CREATE=false
 ENV PYTHONUNBUFFERED=1
 
-COPY pyproject.toml poetry.lock* ./
+COPY backend/pyproject.toml backend/poetry.lock /app/backend/
 
 # Install Poetry and dependencies
 RUN pip install --no-cache-dir poetry && \
     poetry install --no-root
 
-COPY . .
+COPY backend/ /app/backend/
 
 # Run tests
 RUN coverage run -m pytest

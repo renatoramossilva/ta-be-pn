@@ -7,6 +7,7 @@
 - [Dependency Management with Poetry](#dependency-management-with-poetry)
 - [Project setup](#project-setup)
 - [API Documentation](#api-documentation)
+- [User Interface](#user-interface)
 - [Code Quality](#code-quality)
 - [Unit tests](#unit-tests)
 - [Tests Coverage](tests-coverage)
@@ -118,6 +119,17 @@ To validate the endpoint, independently the way that the API was started, you ca
 ## API Documentation
 
 You can find the API documentation at the following link: [API Documentation](http://localhost:8000/docs)
+
+
+## User Interface
+
+To start the user interface it is needed to follow these steps:
+
+Go to the `frontend/app` directory and run:
+
+`npm start`
+
+After following these steps, a very simple user interface will be available to interact with the API. You can access it by navigating to [http://localhost:3000/](http://localhost:3000/).
 
 
 ## Code Quality
