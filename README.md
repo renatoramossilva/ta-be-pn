@@ -7,7 +7,6 @@
 - [Dependency Management with Poetry](#dependency-management-with-poetry)
 - [Project setup](#project-setup)
 - [API Documentation](#api-documentation)
-- [User Interface](#user-interface)
 - [Code Quality](#code-quality)
 - [Unit tests](#unit-tests)
 - [Tests Coverage](tests-coverage)
@@ -27,23 +26,45 @@ Before you begin, ensure you have the following prerequisites installed on your 
 The project is organized following this structure:
 
 ```bash
-├── app
-│   ├── db
-│   │   ├── 2018_01_Sites_mobiles_2G_3G_4G_France_metropolitaine_L93.csv
-│   │   └── data.py
-│   ├── __init__.py
-│   ├── main.py
-│   ├── routes.py
-│   └── utils.py
-├── poetry.lock
-├── pyproject.toml
-├── pytest.ini
+├── backend
+│   ├── app
+│   │   ├── db
+│   │   │   ├── 2018_01_Sites_mobiles_2G_3G_4G_France_metropolitaine_L93.csv
+│   │   │   └── data.py
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── routes.py
+│   │   └── utils
+│   │       ├── common.py
+│   │       └── logger.py
+│   ├── docker
+│   │   └── Dockerfile
+│   ├── poetry.lock
+│   ├── pyproject.toml
+│   ├── pytest.ini
+│   ├── tests
+│   │   └── app
+│   │       ├── db
+│   │       │   └── test_data.py
+│   │       └── test_utils.py
+│   └── tox.ini
+├── docker-compose.yaml
+├── frontend
+│   ├── app
+│   │   ├── node_modules
+│   │   └── src
+│   │       ├── App.css
+│   │       ├── App.js
+│   │       ├── App.test.js
+│   │       ├── components
+│   │       │   └── MobileCoverage.js
+│   │       ├── index.css
+│   │       ├── index.js
+│   │       └── services
+│   │           └── api.js
+│   └── docker
+│       └── Dockerfile
 ├── README.md
-└── tests
-    └── app
-        ├── db
-        │   └── test_data.py
-        └── test_utils.py
 ```
 
 ## Dependency Management with Poetry
@@ -98,6 +119,9 @@ Initialize the application using `docker compose` command:
 > docker compose up --build
 ```
 
+Using the `docker-compose` option, a very simple user interface will be available to interact with the API. You can access it by navigating to [http://localhost:3000/](http://localhost:3000/).
+
+
 To validate the endpoint, independently the way that the API was started, you can use the following `curl` command:
 
 ```bash
@@ -119,17 +143,6 @@ To validate the endpoint, independently the way that the API was started, you ca
 ## API Documentation
 
 You can find the API documentation at the following link: [API Documentation](http://localhost:8000/docs)
-
-
-## User Interface
-
-To start the user interface it is needed to follow these steps:
-
-Go to the `frontend/app` directory and run:
-
-`npm start`
-
-After following these steps, a very simple user interface will be available to interact with the API. You can access it by navigating to [http://localhost:3000/](http://localhost:3000/).
 
 
 ## Code Quality
