@@ -43,10 +43,7 @@ jobs:
             poetry run isort --diff .  # Check import sorting without making changes
 
       - name: Run mypy
-        run: |
-            poetry run mypy --install-types
-            poetry run mypy .
-        continue-on-error: true
+        run: poetry run mypy **/*.py --install-types --non-interactive --verbose
 
       - name: Run tests
         run: poetry run tox
