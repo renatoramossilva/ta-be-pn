@@ -37,7 +37,6 @@ jobs:
       - name: Run Pylint
         run: |
             poetry run pylint **/*.py
-        continue-on-error: true
 
       - name: Run isort
         run: |
