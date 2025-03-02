@@ -72,6 +72,9 @@ def load_csv_file(csv_path: pathlib.Path) -> pd.DataFrame:
 
     **Returns:**
     A pandas DataFrame with the CSV data
+
+    **Raises:**
+        - FileNotFoundError: If the file is not found
     """
     LOG.info("Loading CSV file")
     if csv_path.exists():
@@ -79,7 +82,7 @@ def load_csv_file(csv_path: pathlib.Path) -> pd.DataFrame:
         df = validate_operator_data(df)
     else:
         LOG.error("The file was not found: %s", csv_path)
-        return {}
+        raise FileNotFoundError("The file was not found: %s", csv_path)
 
     return df
 
@@ -116,7 +119,10 @@ def find_network_coverage(long: float, lat: float) -> dict[str, dict[str, bool]]
     # Convert WGS84 to Lambert93
     x_target, y_target = wgs84_to_lamber93(lat, long)
 
-    df = load_csv_file(DB_URL)
+    try:
+        df = load_csv_file(DB_URL)
+    except FileNotFoundError:
+        return {}
 
     # Convert columns to integers
     df["x"] = df["x"].astype("Int64")

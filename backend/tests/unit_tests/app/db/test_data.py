@@ -79,8 +79,12 @@ def test_load_csv_file(mocker, mock_csv_path):  # pylint: disable=redefined-oute
     mock_db_url.return_value.json.return_value = mock_csv_path
 
     df = data.load_csv_file(mock_csv_path)
-    print(df)
-    print(mock_csv_path)
     assert not df.empty
     assert len(df) == 3
     assert list(df.columns) == ["Operateur", "x", "y", "2G", "3G", "4G"]
+
+
+def test_invalid_csv_file():
+    """Test invalid CSV file"""
+    with pytest.raises(FileNotFoundError, match="The file was not found"):
+        data.load_csv_file(pathlib.Path("invalid_path.csv"))
