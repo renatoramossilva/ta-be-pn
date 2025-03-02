@@ -4,7 +4,7 @@ This module contains the FastAPI routes for the mobile network coverage API.
 
 # pylint: disable=import-error
 
-from fastapi import APIRouter  # type: ignore
+from fastapi import APIRouter, HTTPException  # type: ignore
 
 from app.db.data import find_network_coverage
 from app.utils.common import get_coordinates
@@ -28,10 +28,21 @@ def coverage(address: str) -> dict[str, dict[str, bool]]:
         for the given address
     """
     LOG.info("Getting network coverage for address %s: address")
-    cood = get_coordinates(address)
+    coordinates = get_coordinates(address)
 
-    if cood is None:
+    if coordinates is None:
         LOG.error("Unable to get coordinates for the given address")
-        return {"error": "Unable to get coordinates for the given address"}, 400
+        raise HTTPException(
+            status_code=400, detail="Unable to get coordinates for the given address"
+        )
 
-    return find_network_coverage(*cood)
+    data_coverage = find_network_coverage(*coordinates)
+
+    if not data_coverage:
+        LOG.error("Unable to find network coverage for the given location")
+        raise HTTPException(
+            status_code=404,
+            detail="Unable to find network coverage for the given location",
+        )
+
+    return data_coverage
