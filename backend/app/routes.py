@@ -34,6 +34,7 @@ PROMETHEUS_REQUEST_FAILURES = Counter(
     "ta_be_pn_metrics_request_failures", "Number of failed requests to /coverage"
 )
 
+
 @router.get("/coverage")
 def coverage(
     address: str,
@@ -61,7 +62,8 @@ def coverage(
         if coordinates is None:
             LOG.error("Unable to get coordinates for the given address")
             raise HTTPException(
-                status_code=400, detail="Unable to get coordinates for the given address"
+                status_code=400,
+                detail="Unable to get coordinates for the given address",
             )
 
         data_coverage = find_network_coverage(*coordinates)
@@ -69,13 +71,15 @@ def coverage(
         if not data_coverage:
             LOG.error("Unable to find network coverage for the given location")
             raise HTTPException(
-                status_code=404,
+                status_code=400,
                 detail="Unable to find network coverage for the given location",
             )
     except Exception as ex:  # pylint: disable=broad-except
         LOG.error("An error occurred while fetching network coverage: %s", ex)
         PROMETHEUS_REQUEST_FAILURES.inc()
-        raise Exception from ex
+        raise HTTPException(
+            400, "Unable to get coordinates for the given address"
+        ) from ex
 
     latency = time.time() - start_time
     PROMETHEUS_REQUEST_LATENCY.observe(latency)
