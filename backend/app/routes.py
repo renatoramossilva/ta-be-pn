@@ -16,7 +16,9 @@ LOG = setup_logger(__name__)
 
 
 @router.get("/coverage")
-def coverage(address: str) -> dict[str, dict[str, bool]]:
+def coverage(
+    address: str,
+) -> dict[str, dict[str, bool]]:
     """
     Get network coverage for a given address
 
@@ -41,7 +43,7 @@ def coverage(address: str) -> dict[str, dict[str, bool]]:
     if not data_coverage:
         LOG.error("Unable to find network coverage for the given location")
         raise HTTPException(
-            status_code=404,
+            status_code=400,
             detail="Unable to find network coverage for the given location",
         )
 

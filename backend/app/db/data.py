@@ -8,7 +8,7 @@ import pandas as pd
 from app.utils.common import wgs84_to_lamber93
 from app.utils.logger import setup_logger
 
-DB_URL: str = pathlib.Path(
+DB_URL = pathlib.Path(
     "app/db/2018_01_Sites_mobiles_2G_3G_4G_France_metropolitaine_L93.csv"
 )
 LOG = setup_logger(__name__)
@@ -63,7 +63,7 @@ def validate_operator_data(df):
     return df
 
 
-def load_csv_file(csv_path: pathlib.Path) -> pd.DataFrame:
+def load_csv_file(csv_path: pathlib.Path) -> pd.DataFrame | dict:
     """
     Load a CSV file
 
