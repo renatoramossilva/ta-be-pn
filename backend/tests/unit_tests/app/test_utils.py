@@ -5,7 +5,7 @@ This file contains tests for the utils module.
 import pytest
 import requests
 
-from app.utils.common import get_coordinates, lamber93_to_wgs84
+from app.utils.common import get_coordinates, lamber93_to_wgs84, request_external_api
 
 
 @pytest.mark.parametrize(
@@ -75,11 +75,25 @@ def test_get_coordinates(mocker, address, expected_result, mock_response):
     assert get_coordinates(address) == (expected_result)
 
 
-def test_get_coordinates_timeout(mocker):
+@pytest.mark.parametrize(
+    "side_effect, call_count",
+    [
+        (
+            requests.exceptions.RequestException("Error"),
+            3,
+        ),
+    ],
+)
+def test_request_external_api_retry_fail(mocker, side_effect, call_count):
     """
-    Test the get_coordinates function when a Timeout exception is raised
+    Test the get_coordinates function when a RequestException is raised and retried
     """
-    mock_requests = mocker.patch("requests.get")
-    mock_requests.side_effect = requests.exceptions.Timeout
+    mock_get = mocker.patch("requests.get")
+    mock_get.side_effect = side_effect
 
-    assert get_coordinates("1 rue de la paix, Paris") is None
+    try:
+        request_external_api("http://url")
+    except requests.exceptions.RequestException:
+        pass
+
+    assert mock_get.call_count == call_count
