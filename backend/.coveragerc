@@ -3,6 +3,7 @@ source = app
 omit =
     tests/*
     **/__init__.py
+    load_tests/*
 
 [html]
 directory = htmlcov
