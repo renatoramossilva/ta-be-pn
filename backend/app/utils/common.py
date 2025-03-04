@@ -6,6 +6,7 @@ Common functions used in the project
 
 import pyproj  # type: ignore
 import requests
+from retrying import retry  # type: ignore
 
 from app.utils.logger import setup_logger
 
@@ -78,6 +79,27 @@ def lamber93_to_wgs84(coord_x: float, coord_y: float) -> tuple[float, float]:
     return lat, long
 
 
+@retry(stop_max_attempt_number=3, wait_fixed=2000)
+def request_external_api(url: str) -> dict | None:
+    """
+    Make a request to an external API and return the response data as a dictionary.
+
+    **Request Body:**
+    - `url`: The URL to make the request to
+
+    **Returns:**
+    The response data as a dictionary
+
+    **Raises:**
+    - `Exception`: If an error occurs while making the request
+    """
+    LOG.info("Making request to external API: %s", url)
+    response = requests.get(url, timeout=REQUEST_TIMEOUT)
+    response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
+
+    return response.json()
+
+
 def get_coordinates(address: str) -> tuple[float, float] | None:
     """
     Get the coordinates of an address
@@ -88,30 +110,13 @@ def get_coordinates(address: str) -> tuple[float, float] | None:
     **Returns:**
     A tuple containing the longitude and latitude of the address
     e.g.: [<longitude>, <latitude>]
-
-    **Raises:**
-    - `requests.exceptions.Timeout`: If the request times out
-    - `Exception`: If an error occurs while fetching the coordinates
     """
     url = f"https://api-adresse.data.gouv.fr/search/?q={address}"
+    data = request_external_api(url)
 
-    LOG.info("Fetching coordinates for address: %s", address)
-    try:
-        response = requests.get(url, timeout=REQUEST_TIMEOUT)
-        response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
-        data = response.json()
-
-        if data.get("features"):  # Check if the features key exists
-            coordinates = data["features"][0]["geometry"]["coordinates"]
-            LOG.info("Coordinates found: %s", coordinates)
-            return coordinates
-
-    except requests.exceptions.Timeout:
-        LOG.error(
-            "Timeout occurred while fetching coordinates for address: %s", address
-        )
-
-    except Exception as ex:  # pylint: disable=broad-except
-        LOG.error("An error occurred while fetching coordinates: %s", ex)
+    if data and data.get("features"):  # Check if the features key exists
+        coordinates = data["features"][0]["geometry"]["coordinates"]
+        LOG.info("Coordinates found: %s", coordinates)
+        return coordinates
 
     return None
